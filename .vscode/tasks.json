@@ -1,0 +1,65 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "react-start",
+            "detail": "react-scripts start for debug",
+            "type": "npm",
+            "script": "dev",
+            "isBackground": true,
+            "problemMatcher": [
+                {
+                    "pattern": [
+                        {
+                            "regexp": ".",
+                            "file": 1,
+                            "line": 1,
+                            "message": 1
+                        }
+                    ],
+                    "background": {
+                        "activeOnStart": true,
+                        "beginsPattern": "^Starting.*$",
+                        "endsPattern": "^Compiled.*$"
+                    },
+                }
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}/editor",
+                "env": {
+                    "BROWSER": "none"
+                }
+            }
+        },
+        {
+            "label": "terminate-react-start",
+            "command": "${input:terminate}",
+            "type": "shell",
+            "problemMatcher": []
+        },
+        {
+            "label": "react-build",
+            "type": "shell",
+            "command": "npm run build",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": [
+                "$tsc"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}/editor",
+            },
+            "detail": "Build the React application"
+        },
+    ],
+    "inputs": [
+        {
+            "id": "terminate",
+            "type": "command",
+            "command": "workbench.action.tasks.terminate",
+            "args": "react-start"
+        }
+    ]
+}

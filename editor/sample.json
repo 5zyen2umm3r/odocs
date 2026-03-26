@@ -1,0 +1,1232 @@
+[
+  {
+    "id": "root_ops",
+    "parentId": null,
+    "prevSiblingId": null,
+    "type": "text",
+    "title": "社内タスク管理システム 運用設計ドキュメント",
+    "text": "本ドキュメントは、社内タスク共有・管理システム（以下「本システム」）の運用・保守に関する設計方針、手順、および担当体制を定めるものです。\n運用フレームワークに基づき、実運用に即した形で記述しています。",
+    "enabled": true,
+    "index": null
+  },
+  {
+    "id": "meta_ops",
+    "parentId": "root_ops",
+    "prevSiblingId": null,
+    "type": "metadata",
+    "title": "文書管理情報",
+    "text": null,
+    "enabled": true,
+    "index": null,
+    "date": "2026-03-25",
+    "user": "システム運用チーム"
+  },
+  {
+    "id": "n_overview",
+    "parentId": "root_ops",
+    "prevSiblingId": "meta_ops",
+    "type": "text",
+    "title": "システム概要",
+    "text": "社内全部門が利用するタスク共有・管理プラットフォームです。プロジェクト単位のタスク管理、担当者アサイン、進捗トラッキング、通知機能を提供します。",
+    "enabled": true,
+    "index": null
+  },
+  {
+    "id": "n_overview_arch",
+    "parentId": "n_overview",
+    "prevSiblingId": null,
+    "type": "text",
+    "title": "システム構成",
+    "text": "【フロントエンド】React SPA（Nginx配信）\n【バックエンドAPI】Node.js / Express（Dockerコンテナ）\n【データベース】PostgreSQL 15（プライマリ＋レプリカ構成）\n【キャッシュ】Redis 7\n【ファイルストレージ】オンプレミスNAS\n【認証】社内LDAPと連携したSSOによる認証",
+    "enabled": true,
+    "index": null
+  },
+  {
+    "id": "n_overview_users",
+    "parentId": "n_overview",
+    "prevSiblingId": "n_overview_arch",
+    "type": "table",
+    "title": "利用部門・ユーザ規模",
+    "text": null,
+    "enabled": true,
+    "index": null,
+    "columns": [
+      {
+        "key": "dept",
+        "label": "部門",
+        "type": "string"
+      },
+      {
+        "key": "users",
+        "label": "ユーザ数",
+        "type": "number"
+      },
+      {
+        "key": "role",
+        "label": "主な利用ロール",
+        "type": "string"
+      },
+      {
+        "key": "note",
+        "label": "備考",
+        "type": "string"
+      }
+    ],
+    "keyColumn": "dept",
+    "rows": [
+      {
+        "dept": "開発部",
+        "users": 45,
+        "role": "管理者・一般ユーザ",
+        "note": "プロジェクト管理が主用途"
+      },
+      {
+        "dept": "営業部",
+        "users": 30,
+        "role": "一般ユーザ",
+        "note": "案件タスクの進捗確認"
+      },
+      {
+        "dept": "情報システム部",
+        "users": 10,
+        "role": "システム管理者・一般ユーザ",
+        "note": "運用管理含む"
+      },
+      {
+        "dept": "総務部",
+        "users": 15,
+        "role": "一般ユーザ",
+        "note": "社内手続きタスク管理"
+      },
+      {
+        "dept": "経営企画部",
+        "users": 8,
+        "role": "閲覧者",
+        "note": "進捗レポート参照"
+      }
+    ]
+  },
+  {
+    "id": "n_team",
+    "parentId": "root_ops",
+    "prevSiblingId": "n_overview",
+    "type": "text",
+    "title": "運用体制",
+    "text": "本システムの運用は情報システム部が主管し、各部門の業務担当者と連携して実施します。",
+    "enabled": true,
+    "index": null
+  },
+  {
+    "id": "n_team_roles",
+    "parentId": "n_team",
+    "prevSiblingId": null,
+    "type": "table",
+    "title": "担当者・役割一覧",
+    "text": null,
+    "enabled": true,
+    "index": null,
+    "columns": [
+      {
+        "key": "role",
+        "label": "役割",
+        "type": "string"
+      },
+      {
+        "key": "dept",
+        "label": "所属",
+        "type": "string"
+      },
+      {
+        "key": "name",
+        "label": "担当者名",
+        "type": "string"
+      },
+      {
+        "key": "scope",
+        "label": "担当範囲",
+        "type": "string"
+      },
+      {
+        "key": "contact",
+        "label": "連絡先（内線）",
+        "type": "string"
+      }
+    ],
+    "keyColumn": "role",
+    "rows": [
+      {
+        "role": "システム管理者",
+        "dept": "情報システム部",
+        "name": "山田 太郎",
+        "scope": "インフラ全般・ユーザ管理・障害対応",
+        "contact": "1001"
+      },
+      {
+        "role": "副管理者",
+        "dept": "情報システム部",
+        "name": "鈴木 花子",
+        "scope": "バックアップ管理・定期メンテナンス",
+        "contact": "1002"
+      },
+      {
+        "role": "アプリ担当",
+        "dept": "開発部",
+        "name": "田中 一郎",
+        "scope": "アプリケーション更新・不具合対応",
+        "contact": "2010"
+      },
+      {
+        "role": "部門代表（開発）",
+        "dept": "開発部",
+        "name": "佐藤 次郎",
+        "scope": "部門内ユーザサポート・要望取りまとめ",
+        "contact": "2001"
+      },
+      {
+        "role": "部門代表（営業）",
+        "dept": "営業部",
+        "name": "高橋 三郎",
+        "scope": "部門内ユーザサポート・要望取りまとめ",
+        "contact": "3001"
+      }
+    ]
+  },
+  {
+    "id": "n_team_escalation",
+    "parentId": "n_team",
+    "prevSiblingId": "n_team_roles",
+    "type": "text",
+    "title": "エスカレーションフロー",
+    "text": "1. 一般ユーザ → 部門代表へ問い合わせ\n2. 部門代表 → 情報システム部（副管理者）へエスカレーション\n3. 副管理者が対応不可の場合 → システム管理者へエスカレーション\n4. インフラ起因の重大障害 → システム管理者が即時対応し、経営企画部へ報告",
+    "enabled": true,
+    "index": null
+  },
+  {
+    "id": "n_routine",
+    "parentId": "root_ops",
+    "prevSiblingId": "n_team",
+    "type": "text",
+    "title": "定期運用作業",
+    "text": "本システムの安定稼働を維持するため、以下の定期作業を実施します。各作業は作業記録台帳に記録し、実施後に管理者が確認します。",
+    "enabled": true,
+    "index": null
+  },
+  {
+    "id": "n_routine_list",
+    "parentId": "n_routine",
+    "prevSiblingId": null,
+    "type": "table",
+    "title": "定期作業一覧",
+    "text": null,
+    "enabled": true,
+    "index": null,
+    "columns": [
+      {
+        "key": "task_id",
+        "label": "ID",
+        "type": "string"
+      },
+      {
+        "key": "task",
+        "label": "作業名",
+        "type": "string"
+      },
+      {
+        "key": "cycle",
+        "label": "周期",
+        "type": "string"
+      },
+      {
+        "key": "timing",
+        "label": "実施タイミング",
+        "type": "string"
+      },
+      {
+        "key": "owner",
+        "label": "担当",
+        "type": "string"
+      },
+      {
+        "key": "duration",
+        "label": "所要時間（目安）",
+        "type": "string"
+      },
+      {
+        "key": "enabled",
+        "label": "有効",
+        "type": "boolean"
+      }
+    ],
+    "keyColumn": "task_id",
+    "rows": [
+      {
+        "task_id": "RT-01",
+        "task": "DBフルバックアップ",
+        "cycle": "毎日",
+        "timing": "深夜2:00（自動）",
+        "owner": "副管理者（確認）",
+        "duration": "約30分",
+        "enabled": true
+      },
+      {
+        "task_id": "RT-02",
+        "task": "DBトランザクションログバックアップ",
+        "cycle": "6時間毎",
+        "timing": "0:00 / 6:00 / 12:00 / 18:00（自動）",
+        "owner": "副管理者（確認）",
+        "duration": "約5分",
+        "enabled": true
+      },
+      {
+        "task_id": "RT-03",
+        "task": "バックアップ世代確認・古世代削除",
+        "cycle": "週次",
+        "timing": "月曜 9:00",
+        "owner": "副管理者",
+        "duration": "約15分",
+        "enabled": true
+      },
+      {
+        "task_id": "RT-04",
+        "task": "アプリケーションログローテーション",
+        "cycle": "週次",
+        "timing": "日曜 3:00（自動）",
+        "owner": "副管理者（確認）",
+        "duration": "約5分",
+        "enabled": true
+      },
+      {
+        "task_id": "RT-05",
+        "task": "ディスク使用量確認",
+        "cycle": "週次",
+        "timing": "月曜 10:00",
+        "owner": "副管理者",
+        "duration": "約10分",
+        "enabled": true
+      },
+      {
+        "task_id": "RT-06",
+        "task": "Redisキャッシュ統計確認",
+        "cycle": "週次",
+        "timing": "月曜 10:00",
+        "owner": "副管理者",
+        "duration": "約5分",
+        "enabled": true
+      },
+      {
+        "task_id": "RT-07",
+        "task": "セキュリティパッチ適用（OS・ミドルウェア）",
+        "cycle": "月次",
+        "timing": "第2土曜 メンテナンス枠内",
+        "owner": "システム管理者",
+        "duration": "約2時間",
+        "enabled": true
+      },
+      {
+        "task_id": "RT-08",
+        "task": "SSL証明書有効期限確認",
+        "cycle": "月次",
+        "timing": "月初第1営業日",
+        "owner": "副管理者",
+        "duration": "約10分",
+        "enabled": true
+      },
+      {
+        "task_id": "RT-09",
+        "task": "ユーザアカウント棚卸し（退職者・異動者確認）",
+        "cycle": "月次",
+        "timing": "月末最終営業日",
+        "owner": "システム管理者",
+        "duration": "約30分",
+        "enabled": true
+      },
+      {
+        "task_id": "RT-10",
+        "task": "性能統計レポート作成・報告",
+        "cycle": "月次",
+        "timing": "翌月第1営業日",
+        "owner": "システム管理者",
+        "duration": "約1時間",
+        "enabled": true
+      },
+      {
+        "task_id": "RT-11",
+        "task": "DR（災害復旧）訓練・バックアップリストア確認",
+        "cycle": "半期",
+        "timing": "4月・10月 第3土曜",
+        "owner": "システム管理者・副管理者",
+        "duration": "約4時間",
+        "enabled": true
+      },
+      {
+        "task_id": "RT-12",
+        "task": "システム全体棚卸し・ドキュメント更新",
+        "cycle": "年次",
+        "timing": "3月 第4週",
+        "owner": "システム管理者",
+        "duration": "約1日",
+        "enabled": true
+      }
+    ]
+  },
+  {
+    "id": "n_routine_backup",
+    "parentId": "n_routine",
+    "prevSiblingId": "n_routine_list",
+    "type": "text",
+    "title": "バックアップ方針",
+    "text": "【バックアップ対象】\n- PostgreSQLデータベース（全スキーマ）\n- アップロードファイル（NAS上の添付ファイル領域）\n- アプリケーション設定ファイル\n\n【保管世代】\n- 日次バックアップ：7世代\n- 週次バックアップ：4世代\n- 月次バックアップ：12世代\n\n【保管場所】\n- プライマリ：バックアップサーバ（同一DC内）\n- セカンダリ：テープメディア（別フロア保管）\n\n【リストア目標】\n- RTO（目標復旧時間）：4時間以内\n- RPO（目標復旧時点）：最大6時間前",
+    "enabled": true,
+    "index": null
+  },
+  {
+    "id": "n_routine_maintenance_window",
+    "parentId": "n_routine",
+    "prevSiblingId": "n_routine_backup",
+    "type": "text",
+    "title": "メンテナンス枠",
+    "text": "定期メンテナンスは以下の時間帯に実施します。メンテナンス実施の3営業日前までに全ユーザへメール通知を行います。\n\n【通常メンテナンス枠】\n毎月第2土曜日 22:00 〜 翌日 6:00\n\n【緊急メンテナンス】\n障害・セキュリティ対応が必要な場合は随時実施。実施1時間前までに通知。\n\n【メンテナンス中の対応】\nシステム停止中はメンテナンスページを表示。緊急連絡先（システム管理者携帯）を掲示。",
+    "enabled": true,
+    "index": null
+  },
+  {
+    "id": "n_monitor",
+    "parentId": "root_ops",
+    "prevSiblingId": "n_routine",
+    "type": "text",
+    "title": "監視・アラート設計",
+    "text": "システムの安定稼働を確保するため、以下の監視項目を設定します。アラートはメール・Slackチャンネル（#sysops-alert）へ通知します。",
+    "enabled": true,
+    "index": null
+  },
+  {
+    "id": "n_monitor_items",
+    "parentId": "n_monitor",
+    "prevSiblingId": null,
+    "type": "table",
+    "title": "監視項目一覧",
+    "text": null,
+    "enabled": true,
+    "index": null,
+    "columns": [
+      {
+        "key": "item",
+        "label": "監視項目",
+        "type": "string"
+      },
+      {
+        "key": "target",
+        "label": "対象",
+        "type": "string"
+      },
+      {
+        "key": "threshold_warn",
+        "label": "警告閾値",
+        "type": "string"
+      },
+      {
+        "key": "threshold_crit",
+        "label": "障害閾値",
+        "type": "string"
+      },
+      {
+        "key": "interval",
+        "label": "監視間隔",
+        "type": "string"
+      },
+      {
+        "key": "action",
+        "label": "アラート時アクション",
+        "type": "string"
+      }
+    ],
+    "keyColumn": "item",
+    "rows": [
+      {
+        "item": "CPU使用率",
+        "target": "APIサーバ",
+        "threshold_warn": "70%以上",
+        "threshold_crit": "90%以上",
+        "interval": "1分",
+        "action": "警告：Slack通知 / 障害：電話連絡"
+      },
+      {
+        "item": "メモリ使用率",
+        "target": "APIサーバ",
+        "threshold_warn": "75%以上",
+        "threshold_crit": "90%以上",
+        "interval": "1分",
+        "action": "警告：Slack通知 / 障害：電話連絡"
+      },
+      {
+        "item": "ディスク使用率",
+        "target": "全サーバ",
+        "threshold_warn": "70%以上",
+        "threshold_crit": "85%以上",
+        "interval": "5分",
+        "action": "警告：メール通知 / 障害：電話連絡"
+      },
+      {
+        "item": "DB接続数",
+        "target": "PostgreSQL",
+        "threshold_warn": "80接続以上",
+        "threshold_crit": "95接続以上",
+        "interval": "1分",
+        "action": "警告：Slack通知 / 障害：電話連絡"
+      },
+      {
+        "item": "DB レプリケーション遅延",
+        "target": "PostgreSQL レプリカ",
+        "threshold_warn": "30秒以上",
+        "threshold_crit": "120秒以上",
+        "interval": "1分",
+        "action": "警告：Slack通知 / 障害：電話連絡"
+      },
+      {
+        "item": "Redisメモリ使用率",
+        "target": "Redis",
+        "threshold_warn": "70%以上",
+        "threshold_crit": "90%以上",
+        "interval": "1分",
+        "action": "警告：Slack通知"
+      },
+      {
+        "item": "HTTPレスポンスタイム",
+        "target": "APIエンドポイント",
+        "threshold_warn": "2秒以上",
+        "threshold_crit": "5秒以上",
+        "interval": "30秒",
+        "action": "警告：Slack通知 / 障害：電話連絡"
+      },
+      {
+        "item": "HTTPエラー率（5xx）",
+        "target": "APIエンドポイント",
+        "threshold_warn": "1%以上",
+        "threshold_crit": "5%以上",
+        "interval": "1分",
+        "action": "警告：Slack通知 / 障害：電話連絡"
+      },
+      {
+        "item": "プロセス死活",
+        "target": "API・Nginx・PostgreSQL・Redis",
+        "threshold_warn": null,
+        "threshold_crit": "プロセス停止",
+        "interval": "30秒",
+        "action": "即時電話連絡・自動再起動試行"
+      },
+      {
+        "item": "SSL証明書有効期限",
+        "target": "公開エンドポイント",
+        "threshold_warn": "30日前",
+        "threshold_crit": "7日前",
+        "interval": "1日",
+        "action": "警告：メール通知 / 障害：電話連絡"
+      },
+      {
+        "item": "バックアップ完了確認",
+        "target": "バックアップジョブ",
+        "threshold_warn": null,
+        "threshold_crit": "未完了",
+        "interval": "毎日3:00確認",
+        "action": "障害：メール・Slack通知"
+      }
+    ]
+  },
+  {
+    "id": "n_incident",
+    "parentId": "root_ops",
+    "prevSiblingId": "n_monitor",
+    "type": "text",
+    "title": "障害対応",
+    "text": "障害発生時は以下の手順に従い、迅速かつ確実に対応します。対応内容はすべてインシデント管理台帳に記録します。",
+    "enabled": true,
+    "index": null
+  },
+  {
+    "id": "n_incident_flow",
+    "parentId": "n_incident",
+    "prevSiblingId": null,
+    "type": "text",
+    "title": "障害対応フロー",
+    "text": "【STEP 1】検知\n監視アラートまたはユーザ報告により障害を検知。\n\n【STEP 2】初動確認（5分以内）\n- 影響範囲の特定（全体停止 / 一部機能 / 特定ユーザ）\n- 暫定対処の実施可否判断\n- 関係者への第一報（Slack #sysops-alert）\n\n【STEP 3】暫定対処（30分以内）\n- サービス継続が困難な場合はメンテナンスページへ切り替え\n- 自動再起動・フェイルオーバーの確認\n\n【STEP 4】原因調査\n- ログ解析（アプリ・DB・OS）\n- 直近の変更作業との関連確認\n\n【STEP 5】恒久対処・復旧\n- 原因に応じた修正・設定変更\n- 動作確認後にサービス再開\n\n【STEP 6】事後報告\n- 復旧後24時間以内にインシデントレポートを作成\n- 再発防止策を検討・実施",
+    "enabled": true,
+    "index": null
+  },
+  {
+    "id": "n_incident_severity",
+    "parentId": "n_incident",
+    "prevSiblingId": "n_incident_flow",
+    "type": "table",
+    "title": "障害レベル定義",
+    "text": null,
+    "enabled": true,
+    "index": null,
+    "columns": [
+      {
+        "key": "level",
+        "label": "レベル",
+        "type": "string"
+      },
+      {
+        "key": "label",
+        "label": "名称",
+        "type": "string"
+      },
+      {
+        "key": "criteria",
+        "label": "判定基準",
+        "type": "string"
+      },
+      {
+        "key": "response_time",
+        "label": "初動目標",
+        "type": "string"
+      },
+      {
+        "key": "notify",
+        "label": "報告先",
+        "type": "string"
+      }
+    ],
+    "keyColumn": "level",
+    "rows": [
+      {
+        "level": "P1",
+        "label": "重大",
+        "criteria": "システム全体停止 / 全ユーザ利用不可",
+        "response_time": "15分以内",
+        "notify": "システム管理者・部長・経営企画部"
+      },
+      {
+        "level": "P2",
+        "label": "高",
+        "criteria": "主要機能停止 / 50%以上のユーザに影響",
+        "response_time": "30分以内",
+        "notify": "システム管理者・副管理者"
+      },
+      {
+        "level": "P3",
+        "label": "中",
+        "criteria": "一部機能の劣化 / 特定ユーザに影響",
+        "response_time": "2時間以内",
+        "notify": "副管理者"
+      },
+      {
+        "level": "P4",
+        "label": "低",
+        "criteria": "軽微な不具合 / 回避策あり",
+        "response_time": "翌営業日",
+        "notify": "アプリ担当"
+      }
+    ]
+  },
+  {
+    "id": "n_incident_contacts",
+    "parentId": "n_incident",
+    "prevSiblingId": "n_incident_severity",
+    "type": "table",
+    "title": "緊急連絡先",
+    "text": null,
+    "enabled": true,
+    "index": null,
+    "columns": [
+      {
+        "key": "role",
+        "label": "役割",
+        "type": "string"
+      },
+      {
+        "key": "name",
+        "label": "氏名",
+        "type": "string"
+      },
+      {
+        "key": "mobile",
+        "label": "携帯電話",
+        "type": "string"
+      },
+      {
+        "key": "available",
+        "label": "対応時間",
+        "type": "string"
+      }
+    ],
+    "keyColumn": "role",
+    "rows": [
+      {
+        "role": "システム管理者",
+        "name": "山田 太郎",
+        "mobile": "090-XXXX-0001",
+        "available": "24時間（P1・P2のみ）"
+      },
+      {
+        "role": "副管理者",
+        "name": "鈴木 花子",
+        "mobile": "090-XXXX-0002",
+        "available": "平日 7:00〜22:00"
+      },
+      {
+        "role": "アプリ担当",
+        "name": "田中 一郎",
+        "mobile": "090-XXXX-0003",
+        "available": "平日 8:00〜20:00"
+      }
+    ]
+  },
+  {
+    "id": "n_change",
+    "parentId": "root_ops",
+    "prevSiblingId": "n_incident",
+    "type": "text",
+    "title": "変更管理",
+    "text": "システムへの変更（アプリ更新・設定変更・インフラ変更）は、変更管理プロセスに従って実施します。無計画な変更による障害を防止することを目的とします。",
+    "enabled": true,
+    "index": null
+  },
+  {
+    "id": "n_change_process",
+    "parentId": "n_change",
+    "prevSiblingId": null,
+    "type": "text",
+    "title": "変更申請・承認フロー",
+    "text": "1. 変更申請者が「変更申請書」を作成し、システム管理者へ提出（実施3営業日前まで）\n2. システム管理者が影響範囲・リスクを評価\n3. 重大変更（P1相当リスク）は部長承認が必要\n4. 承認後、実施計画・ロールバック手順を確定\n5. 変更実施（原則メンテナンス枠内）\n6. 動作確認・完了報告",
+    "enabled": true,
+    "index": null
+  },
+  {
+    "id": "n_change_categories",
+    "parentId": "n_change",
+    "prevSiblingId": "n_change_process",
+    "type": "table",
+    "title": "変更カテゴリと承認レベル",
+    "text": null,
+    "enabled": true,
+    "index": null,
+    "columns": [
+      {
+        "key": "category",
+        "label": "カテゴリ",
+        "type": "string"
+      },
+      {
+        "key": "example",
+        "label": "例",
+        "type": "string"
+      },
+      {
+        "key": "approval",
+        "label": "承認者",
+        "type": "string"
+      },
+      {
+        "key": "lead_time",
+        "label": "申請リードタイム",
+        "type": "string"
+      },
+      {
+        "key": "rollback",
+        "label": "ロールバック要否",
+        "type": "boolean"
+      }
+    ],
+    "keyColumn": "category",
+    "rows": [
+      {
+        "category": "標準変更",
+        "example": "アプリパッチ適用・設定値微調整",
+        "approval": "システム管理者",
+        "lead_time": "3営業日前",
+        "rollback": true
+      },
+      {
+        "category": "重大変更",
+        "example": "DBスキーマ変更・インフラ構成変更",
+        "approval": "システム管理者＋部長",
+        "lead_time": "5営業日前",
+        "rollback": true
+      },
+      {
+        "category": "緊急変更",
+        "example": "セキュリティ脆弱性対応・P1障害対処",
+        "approval": "システム管理者（事後報告）",
+        "lead_time": "即時（事後申請）",
+        "rollback": true
+      },
+      {
+        "category": "軽微変更",
+        "example": "ドキュメント更新・通知文言修正",
+        "approval": "副管理者",
+        "lead_time": "1営業日前",
+        "rollback": false
+      }
+    ]
+  },
+  {
+    "id": "n_user",
+    "parentId": "root_ops",
+    "prevSiblingId": "n_change",
+    "type": "text",
+    "title": "ユーザ管理",
+    "text": "ユーザアカウントの作成・変更・削除は情報システム部が管理します。社内LDAPと連携しているため、原則としてLDAP側の変更が本システムに自動反映されます。",
+    "enabled": true,
+    "index": null
+  },
+  {
+    "id": "n_user_lifecycle",
+    "parentId": "n_user",
+    "prevSiblingId": null,
+    "type": "text",
+    "title": "アカウントライフサイクル",
+    "text": "【入社・異動時】\n- 人事部からの通知を受け、LDAP登録後に本システムへの部門グループ割り当てを実施\n- 初回ログイン時にチュートリアルを表示\n\n【退職・長期休職時】\n- 人事部からの通知を受け、LDAPアカウントを無効化（本システムも自動的にログイン不可）\n- 担当タスクは部門代表へ引き継ぎ依頼\n- 退職後30日でアカウントデータをアーカイブ\n\n【権限変更】\n- 部門代表からの申請に基づき、システム管理者が対応\n- 管理者権限の付与は部長承認が必要",
+    "enabled": true,
+    "index": null
+  },
+  {
+    "id": "n_user_roles",
+    "parentId": "n_user",
+    "prevSiblingId": "n_user_lifecycle",
+    "type": "table",
+    "title": "ロール定義",
+    "text": null,
+    "enabled": true,
+    "index": null,
+    "columns": [
+      {
+        "key": "role",
+        "label": "ロール名",
+        "type": "string"
+      },
+      {
+        "key": "desc",
+        "label": "説明",
+        "type": "string"
+      },
+      {
+        "key": "can_create_project",
+        "label": "プロジェクト作成",
+        "type": "boolean"
+      },
+      {
+        "key": "can_manage_users",
+        "label": "ユーザ管理",
+        "type": "boolean"
+      },
+      {
+        "key": "can_view_all",
+        "label": "全タスク閲覧",
+        "type": "boolean"
+      },
+      {
+        "key": "can_export",
+        "label": "データエクスポート",
+        "type": "boolean"
+      }
+    ],
+    "keyColumn": "role",
+    "rows": [
+      {
+        "role": "システム管理者",
+        "desc": "システム全体の管理権限",
+        "can_create_project": true,
+        "can_manage_users": true,
+        "can_view_all": true,
+        "can_export": true
+      },
+      {
+        "role": "プロジェクト管理者",
+        "desc": "担当プロジェクトの管理権限",
+        "can_create_project": true,
+        "can_manage_users": false,
+        "can_view_all": false,
+        "can_export": true
+      },
+      {
+        "role": "一般ユーザ",
+        "desc": "所属プロジェクトのタスク操作",
+        "can_create_project": false,
+        "can_manage_users": false,
+        "can_view_all": false,
+        "can_export": false
+      },
+      {
+        "role": "閲覧者",
+        "desc": "閲覧のみ（編集不可）",
+        "can_create_project": false,
+        "can_manage_users": false,
+        "can_view_all": false,
+        "can_export": false
+      }
+    ]
+  },
+  {
+    "id": "n_security",
+    "parentId": "root_ops",
+    "prevSiblingId": "n_user",
+    "type": "text",
+    "title": "セキュリティ運用",
+    "text": "セキュリティポリシーに基づき、以下の運用を実施します。（本項目は現在改訂中のため、子項目は非表示）",
+    "enabled": false,
+    "index": null
+  },
+  {
+    "id": "n_security_policy",
+    "parentId": "n_security",
+    "prevSiblingId": null,
+    "type": "text",
+    "title": "パスワードポリシー",
+    "text": "※ 親項目が無効のため表示されません",
+    "enabled": true,
+    "index": null
+  },
+  {
+    "id": "root_batch",
+    "parentId": null,
+    "prevSiblingId": "root_ops",
+    "type": "text",
+    "title": "バッチ処理 運用設計",
+    "text": "本ドキュメントは、社内タスク管理システムで稼働するバッチ処理の設計・運用方針を定めます。",
+    "enabled": true,
+    "index": null
+  },
+  {
+    "id": "meta_batch",
+    "parentId": "root_batch",
+    "prevSiblingId": null,
+    "type": "metadata",
+    "title": "文書管理情報",
+    "text": null,
+    "enabled": true,
+    "index": null,
+    "date": "2026-03-25",
+    "user": "システム運用チーム"
+  },
+  {
+    "id": "n_batch_list",
+    "parentId": "root_batch",
+    "prevSiblingId": "meta_batch",
+    "type": "text",
+    "title": "バッチ一覧",
+    "text": "以下のバッチ処理が定期実行されます。すべてcronジョブとして登録されており、実行ログはアプリケーションログに記録されます。",
+    "enabled": true,
+    "index": null
+  },
+  {
+    "id": "n_batch_table",
+    "parentId": "n_batch_list",
+    "prevSiblingId": null,
+    "type": "table",
+    "title": "バッチジョブ一覧",
+    "text": null,
+    "enabled": true,
+    "index": null,
+    "columns": [
+      {
+        "key": "job_id",
+        "label": "ジョブID",
+        "type": "string"
+      },
+      {
+        "key": "name",
+        "label": "ジョブ名",
+        "type": "string"
+      },
+      {
+        "key": "schedule",
+        "label": "スケジュール（cron）",
+        "type": "string"
+      },
+      {
+        "key": "desc",
+        "label": "処理内容",
+        "type": "string"
+      },
+      {
+        "key": "timeout",
+        "label": "タイムアウト（分）",
+        "type": "number"
+      },
+      {
+        "key": "on_failure",
+        "label": "失敗時アクション",
+        "type": "string"
+      },
+      {
+        "key": "enabled",
+        "label": "有効",
+        "type": "boolean"
+      }
+    ],
+    "keyColumn": "job_id",
+    "rows": [
+      {
+        "job_id": "BJ-01",
+        "name": "タスク期限切れ通知",
+        "schedule": "0 8 * * 1-5",
+        "desc": "期限当日・翌日のタスク担当者へメール通知",
+        "timeout": 10,
+        "on_failure": "Slack通知・翌日リトライ",
+        "enabled": true
+      },
+      {
+        "job_id": "BJ-02",
+        "name": "未割り当てタスクリマインド",
+        "schedule": "0 9 * * 1",
+        "desc": "7日以上未割り当てのタスクをプロジェクト管理者へ通知",
+        "timeout": 10,
+        "on_failure": "Slack通知",
+        "enabled": true
+      },
+      {
+        "job_id": "BJ-03",
+        "name": "DBバックアップ",
+        "schedule": "0 2 * * *",
+        "desc": "PostgreSQLフルダンプをバックアップサーバへ転送",
+        "timeout": 60,
+        "on_failure": "メール・Slack通知・管理者電話",
+        "enabled": true
+      },
+      {
+        "job_id": "BJ-04",
+        "name": "ログアーカイブ",
+        "schedule": "0 3 * * 0",
+        "desc": "週次でアプリログを圧縮・アーカイブ領域へ移動",
+        "timeout": 30,
+        "on_failure": "Slack通知",
+        "enabled": true
+      },
+      {
+        "job_id": "BJ-05",
+        "name": "完了タスク自動クローズ",
+        "schedule": "0 1 * * *",
+        "desc": "完了から90日経過したタスクをアーカイブ状態へ変更",
+        "timeout": 20,
+        "on_failure": "Slack通知",
+        "enabled": true
+      },
+      {
+        "job_id": "BJ-06",
+        "name": "レポートデータ集計",
+        "schedule": "30 23 * * *",
+        "desc": "翌日の管理者ダッシュボード用統計データを事前集計",
+        "timeout": 30,
+        "on_failure": "Slack通知（ダッシュボードはリアルタイム集計にフォールバック）",
+        "enabled": true
+      },
+      {
+        "job_id": "BJ-07",
+        "name": "LDAPユーザ同期",
+        "schedule": "0 */6 * * *",
+        "desc": "LDAPから最新のユーザ情報を取得し、アカウント状態を同期",
+        "timeout": 15,
+        "on_failure": "メール通知・管理者確認",
+        "enabled": true
+      },
+      {
+        "job_id": "BJ-08",
+        "name": "月次利用レポート生成",
+        "schedule": "0 6 1 * *",
+        "desc": "前月の利用統計（ユーザ数・タスク数・完了率）をCSV生成しシステム管理者へメール送信",
+        "timeout": 30,
+        "on_failure": "メール通知",
+        "enabled": true
+      },
+      {
+        "job_id": "BJ-09",
+        "name": "Redisセッションクリーンアップ",
+        "schedule": "0 4 * * *",
+        "desc": "期限切れセッションキーをRedisから削除",
+        "timeout": 5,
+        "on_failure": "Slack通知",
+        "enabled": true
+      },
+      {
+        "job_id": "BJ-10",
+        "name": "添付ファイル孤立チェック",
+        "schedule": "0 5 * * 0",
+        "desc": "タスクと紐付かない孤立ファイルを検出・レポート出力（削除は手動）",
+        "timeout": 20,
+        "on_failure": "Slack通知",
+        "enabled": false
+      }
+    ]
+  },
+  {
+    "id": "n_batch_monitor",
+    "parentId": "root_batch",
+    "prevSiblingId": "n_batch_list",
+    "type": "text",
+    "title": "バッチ監視・アラート",
+    "text": "バッチジョブの実行結果は以下の方法で監視します。",
+    "enabled": true,
+    "index": null
+  },
+  {
+    "id": "n_batch_monitor_detail",
+    "parentId": "n_batch_monitor",
+    "prevSiblingId": null,
+    "type": "text",
+    "title": "監視方法",
+    "text": "【正常終了確認】\n各ジョブ完了後、終了コード（0=正常）をcronログで確認。\n\n【異常検知】\n- 終了コード非0：即時Slack通知\n- タイムアウト超過：プロセスをkillし、Slack・メール通知\n- 連続失敗（3回）：管理者へ電話連絡\n\n【ログ保管】\n- 実行ログ：/var/log/taskapp/batch/\n- 保管期間：90日（その後アーカイブへ移動）",
+    "enabled": true,
+    "index": null
+  },
+  {
+    "id": "root_release",
+    "parentId": null,
+    "prevSiblingId": "root_batch",
+    "type": "text",
+    "title": "リリース管理手順",
+    "text": "本ドキュメントは、社内タスク管理システムのアプリケーションリリース手順を定めます。",
+    "enabled": true,
+    "index": null
+  },
+  {
+    "id": "meta_release",
+    "parentId": "root_release",
+    "prevSiblingId": null,
+    "type": "metadata",
+    "title": "文書管理情報",
+    "text": null,
+    "enabled": true,
+    "index": null,
+    "date": "2026-03-25",
+    "user": "アプリ担当"
+  },
+  {
+    "id": "n_release_flow",
+    "parentId": "root_release",
+    "prevSiblingId": "meta_release",
+    "type": "text",
+    "title": "リリースフロー",
+    "text": "リリースは以下のフローで実施します。本番環境へのデプロイは必ずメンテナンス枠内に実施します。",
+    "enabled": true,
+    "index": null
+  },
+  {
+    "id": "n_release_steps",
+    "parentId": "n_release_flow",
+    "prevSiblingId": null,
+    "type": "table",
+    "title": "リリース手順",
+    "text": null,
+    "enabled": true,
+    "index": null,
+    "columns": [
+      {
+        "key": "step",
+        "label": "STEP",
+        "type": "number"
+      },
+      {
+        "key": "task",
+        "label": "作業",
+        "type": "string"
+      },
+      {
+        "key": "owner",
+        "label": "担当",
+        "type": "string"
+      },
+      {
+        "key": "timing",
+        "label": "タイミング",
+        "type": "string"
+      },
+      {
+        "key": "note",
+        "label": "備考",
+        "type": "string"
+      }
+    ],
+    "keyColumn": "step",
+    "rows": [
+      {
+        "step": 1,
+        "task": "リリース申請・承認取得",
+        "owner": "アプリ担当",
+        "timing": "3営業日前",
+        "note": "変更管理プロセスに従う"
+      },
+      {
+        "step": 2,
+        "task": "ステージング環境でのリリース前テスト",
+        "owner": "アプリ担当",
+        "timing": "2営業日前",
+        "note": "動作確認・回帰テスト実施"
+      },
+      {
+        "step": 3,
+        "task": "リリースノート・ロールバック手順の確定",
+        "owner": "アプリ担当",
+        "timing": "1営業日前",
+        "note": "システム管理者へ共有"
+      },
+      {
+        "step": 4,
+        "task": "ユーザへのメンテナンス通知",
+        "owner": "システム管理者",
+        "timing": "3営業日前",
+        "note": "全ユーザへメール送信"
+      },
+      {
+        "step": 5,
+        "task": "DBバックアップ（リリース直前）",
+        "owner": "副管理者",
+        "timing": "メンテナンス開始直後",
+        "note": "リリース前の最終バックアップ"
+      },
+      {
+        "step": 6,
+        "task": "メンテナンスページ切り替え",
+        "owner": "システム管理者",
+        "timing": "メンテナンス開始",
+        "note": "Nginxの設定を切り替え"
+      },
+      {
+        "step": 7,
+        "task": "アプリケーションデプロイ",
+        "owner": "アプリ担当",
+        "timing": "メンテナンス枠内",
+        "note": "Dockerイメージ更新・コンテナ再起動"
+      },
+      {
+        "step": 8,
+        "task": "DBマイグレーション実行",
+        "owner": "アプリ担当",
+        "timing": "デプロイ後",
+        "note": "マイグレーションがある場合のみ"
+      },
+      {
+        "step": 9,
+        "task": "動作確認",
+        "owner": "アプリ担当・システム管理者",
+        "timing": "デプロイ後",
+        "note": "主要機能の疎通確認"
+      },
+      {
+        "step": 10,
+        "task": "サービス再開・メンテナンスページ解除",
+        "owner": "システム管理者",
+        "timing": "確認完了後",
+        "note": ""
+      },
+      {
+        "step": 11,
+        "task": "完了報告・リリースノート展開",
+        "owner": "アプリ担当",
+        "timing": "翌営業日",
+        "note": "全ユーザへメール送信"
+      }
+    ]
+  },
+  {
+    "id": "n_release_rollback",
+    "parentId": "n_release_flow",
+    "prevSiblingId": "n_release_steps",
+    "type": "text",
+    "title": "ロールバック手順",
+    "text": "リリース後に重大な不具合が発生した場合、以下の手順でロールバックを実施します。\n\n1. システム管理者がロールバック判断（リリース後30分以内を目安）\n2. メンテナンスページへ切り替え\n3. 直前のDockerイメージへ切り戻し\n4. DBマイグレーションがある場合はロールバックスクリプトを実行\n5. 動作確認後にサービス再開\n6. インシデントレポート作成・原因調査",
+    "enabled": true,
+    "index": null
+  }
+]

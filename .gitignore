@@ -1,0 +1,4 @@
+meta.txt
+.venv
+node_modules
+*.md
