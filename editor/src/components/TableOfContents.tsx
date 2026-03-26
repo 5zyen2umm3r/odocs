@@ -7,10 +7,12 @@ interface Props {
 
 export const TableOfContents: React.FC<Props> = ({ roots }) => {
   const renderList = (nodes: TreeNode[]): React.ReactNode => {
-    if (nodes.length === 0) return null;
+    // メタデータを除外
+    const filtered = nodes.filter(tn => tn.node.type !== 'metadata');
+    if (filtered.length === 0) return null;
     return (
       <ul style={{ margin: '0.25rem 0', paddingLeft: '1.25rem', listStyle: 'none' }}>
-        {nodes.map(tn => (
+        {filtered.map(tn => (
           <li key={tn.node.id} style={{ margin: '0.2rem 0' }}>
             <a
               href={`#node-${tn.node.id}`}
@@ -20,7 +22,7 @@ export const TableOfContents: React.FC<Props> = ({ roots }) => {
                 document.getElementById(`node-${tn.node.id}`)?.scrollIntoView({ behavior: 'smooth' });
               }}
             >
-              <span style={{ color: '#868e96', marginRight: 4 }}>{tn.indexLabel}</span>
+              {tn.indexLabel && <span style={{ marginRight: 4 }}>{tn.indexLabel}</span>}
               {tn.node.title}
             </a>
             {tn.node.enabled && renderList(tn.children)}

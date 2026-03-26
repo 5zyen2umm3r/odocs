@@ -46,6 +46,15 @@ export function buildTree(nodes: DocNode[]): TreeNode[] {
 
     let autoCounter = 1;
     return ordered.map((node) => {
+      // メタデータはインデックス採番から除外（カウンタも進めない）
+      if (node.type === 'metadata') {
+        return {
+          node,
+          children: buildChildren(node.id, parentIndex),
+          indexLabel: '',
+        };
+      }
+
       let label: string;
       if (node.index != null && node.index !== '') {
         // manual index: parse as number if possible
