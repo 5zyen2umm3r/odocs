@@ -53,7 +53,7 @@ function renderNode(tn: TreeNode, depth: number): string {
     bodyHtml += `</tbody></table>`;
   }
 
-  if (!node.enabled) {
+  if (node.disabled) {
     // disabled: show title+text only, no children
     return `<section class="doc-node disabled" data-depth="${depth}">${titleHtml}${bodyHtml}<p class="disabled-notice">[この項目は無効です]</p></section>`;
   }
@@ -72,7 +72,7 @@ function buildToc(roots: TreeNode[]): string {
     let html = '<ul>';
     for (const tn of nodes) {
       html += `<li><a href="#node-${tn.node.id}">${escapeHtml(tn.indexLabel)} ${escapeHtml(tn.node.title)}</a>`;
-      if (tn.node.enabled && tn.children.length > 0) {
+      if (!tn.node.disabled && tn.children.length > 0) {
         html += tocList(tn.children);
       }
       html += '</li>';

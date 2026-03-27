@@ -107,7 +107,7 @@ export const NodeView: React.FC<Props> = ({ treeNode, allNodes, editMode, depth,
       prevSiblingId: original.prevSiblingId,
       title: original.title,
       text: original.text,
-      enabled: original.enabled,
+      disabled: original.disabled,
       index: original.index,
     };
     let changed: DocNode;
@@ -177,7 +177,7 @@ export const NodeView: React.FC<Props> = ({ treeNode, allNodes, editMode, depth,
         marginTop: '0.75rem',
         paddingLeft: depth > 1 ? '1rem' : 0,
         borderLeft: depth > 1 ? `3px solid ${borderColor}` : 'none',
-        opacity: node.enabled ? 1 : 0.6,
+        opacity: node.disabled ? 0.6 : 1,
       }}
     >
       {/* Header */}
@@ -221,10 +221,10 @@ export const NodeView: React.FC<Props> = ({ treeNode, allNodes, editMode, depth,
         {editMode && !coverMode && (
           <div style={{ display: 'flex', gap: 4, alignItems: 'center', flexShrink: 0 }}>
             <Switch
-              checked={node.enabled}
+              checked={!node.disabled}
               onChange={v => {
                 const latest = allNodes.find(n => n.id === node.id);
-                if (latest) update({ ...latest, enabled: v });
+                if (latest) update({ ...latest, disabled: !v });
               }}
               label="有効"
             />
@@ -269,10 +269,22 @@ export const NodeView: React.FC<Props> = ({ treeNode, allNodes, editMode, depth,
               autoFocus
               aria-label="テキスト内容"
               value={node.text ?? ''}
-              onChange={e => update({ ...node, text: e.target.value })}
+              onChange={e => {
+                update({ ...node, text: e.target.value });
+                // 高さを内容に合わせて自動調整
+                e.target.style.height = 'auto';
+                e.target.style.height = `${e.target.scrollHeight}px`;
+              }}
               onBlur={() => setEditingText(false)}
               onContextMenu={e => e.stopPropagation()}
-              style={{ width: '100%', minHeight: 80, fontSize: 13, lineHeight: 1.6, border: '1px solid #3b5bdb', borderRadius: 4, padding: '6px 8px', resize: 'vertical', boxSizing: 'border-box' }}
+              ref={el => {
+                // 初期高さ：現在の行数＋1行分
+                if (el) {
+                  el.style.height = 'auto';
+                  el.style.height = `${el.scrollHeight + 22}px`;
+                }
+              }}
+              style={{ width: '100%', minHeight: '3em', fontSize: 13, lineHeight: 1.6, border: '1px solid #3b5bdb', borderRadius: 4, padding: '6px 8px', resize: 'vertical', boxSizing: 'border-box' }}
             />
           ) : (
             <p
@@ -325,7 +337,7 @@ export const NodeView: React.FC<Props> = ({ treeNode, allNodes, editMode, depth,
             />
           )}
 
-          {node.enabled && children.map(child => (
+          {!node.disabled && children.map(child => (
             <NodeView
               key={child.node.id}
               treeNode={child}

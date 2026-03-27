@@ -5,7 +5,7 @@ export interface BaseNode {
   prevSiblingId?: string | null;
   title: string;
   text?: string;
-  enabled: boolean;
+  disabled?: boolean; // 省略・falseで有効、trueで無効
   index?: string | null; // manual index override
   type: NodeType;
 }

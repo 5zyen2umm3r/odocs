@@ -17,7 +17,6 @@ export function createNode(
     prevSiblingId,
     title: '新しい項目',
     text: '',
-    enabled: true,
     index: null,
   };
   if (type === 'text') return { ...base, type: 'text' };

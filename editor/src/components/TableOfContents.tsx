@@ -25,7 +25,7 @@ export const TableOfContents: React.FC<Props> = ({ roots }) => {
               {tn.indexLabel && <span style={{ marginRight: 4 }}>{tn.indexLabel}</span>}
               {tn.node.title}
             </a>
-            {tn.node.enabled && renderList(tn.children)}
+            {!tn.node.disabled && renderList(tn.children)}
           </li>
         ))}
       </ul>

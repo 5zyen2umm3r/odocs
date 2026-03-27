@@ -40,7 +40,7 @@ function createSampleData(): DocNode[] {
   });
 
   const sec3 = createNode('text', root1.id, sec2.id);
-  Object.assign(sec3, { title: '3. 障害対応', text: '障害発生時の対応フローを定義します。', enabled: false });
+  Object.assign(sec3, { title: '3. 障害対応', text: '障害発生時の対応フローを定義します。', disabled: true });
 
   const root2 = createNode('text', null, root1.id);
   Object.assign(root2, { title: 'バッチ処理 運用設計', text: 'バッチ処理の運用設計ドキュメントです。' });
@@ -64,7 +64,14 @@ export default function App() {
   useEffect(() => {
     const saved = loadFromStorage();
     if (saved) {
-      setNodes(saved.nodes);
+      // 旧フォーマット互換: enabled: false → disabled: true
+      const migrated = saved.nodes.map((n: DocNode & { enabled?: boolean }) => {
+        const { enabled, ...rest } = n as DocNode & { enabled?: boolean };
+        if (enabled === false) return { ...rest, disabled: true };
+        if (enabled === true) { const r = { ...rest }; delete (r as { disabled?: boolean }).disabled; return r; }
+        return rest;
+      }) as DocNode[];
+      setNodes(migrated);
       setRestored(true);
     } else {
       setNodes(createSampleData());
@@ -102,8 +109,15 @@ export default function App() {
     reader.onload = ev => {
       try {
         const data = JSON.parse(ev.target?.result as string);
-        const arr: DocNode[] = Array.isArray(data) ? data : data.nodes ?? [];
-        if (arr.length === 0) return alert('有効なノードデータが見つかりません');
+        const raw: DocNode[] = Array.isArray(data) ? data : data.nodes ?? [];
+        if (raw.length === 0) return alert('有効なノードデータが見つかりません');
+        // 旧フォーマット互換: enabled: false → disabled: true に変換
+        const arr = raw.map((n: DocNode & { enabled?: boolean }) => {
+          const { enabled, ...rest } = n as DocNode & { enabled?: boolean };
+          if (enabled === false) return { ...rest, disabled: true };
+          if (enabled === true) { const r = { ...rest }; delete (r as { disabled?: boolean }).disabled; return r; }
+          return rest;
+        }) as DocNode[];
         if (confirm('現在のデータを置き換えますか？（キャンセルで追加）')) {
           setNodes(arr);
         } else {
