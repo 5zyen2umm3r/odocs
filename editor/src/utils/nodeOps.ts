@@ -22,7 +22,7 @@ export function createNode(
   if (type === 'text') return { ...base, type: 'text' };
   if (type === 'metadata') return { ...base, type: 'metadata', date: new Date().toISOString().slice(0, 10), user: '' };
   if (type === 'image') return { ...base, type: 'image', imageUrl: '' };
-  return { ...base, type: 'table', columns: [], rows: [], keyColumn: undefined };
+  return { ...base, type: 'table', columns: [{ key: 'col_1', label: '列1', type: 'string' }], rows: [], keyColumn: undefined };
 }
 
 /** Update a node in the list */

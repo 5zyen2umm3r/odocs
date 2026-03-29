@@ -36,8 +36,12 @@ export const TableEditor: React.FC<Props> = ({ node, editMode, onChange }) => {
   };
 
   const removeColumn = (key: string) => {
+    const newCols = node.columns.filter(c => c.key !== key);
+    const safeCols = newCols.length > 0
+      ? newCols
+      : [{ key: 'col_1', label: '列1', type: 'string' as const }];
     update({
-      columns: node.columns.filter(c => c.key !== key),
+      columns: safeCols,
       rows: node.rows.map(r => { const nr = { ...r }; delete nr[key]; return nr; }),
     });
   };
@@ -191,7 +195,7 @@ export const TableEditor: React.FC<Props> = ({ node, editMode, onChange }) => {
     // ── テーブル ──
     items.push({ group: 'テーブル' });
     items.push({ label: '全行を初期化', icon: '🗑', onClick: () => { if (confirm('全行を削除しますか？')) update({ rows: [] }); }, danger: true, indent: true });
-    items.push({ label: 'テーブルを全初期化', icon: '⚠️', onClick: () => { if (confirm('列・行をすべて削除しますか？')) update({ columns: [], rows: [] }); }, danger: true, indent: true });
+    items.push({ label: 'テーブルを全初期化', icon: '⚠️', onClick: () => { if (confirm('列・行をすべて削除しますか？')) update({ columns: [{ key: 'col_1', label: '列1', type: 'string' }], rows: [] }); }, danger: true, indent: true });
 
     return items;
   };
@@ -225,7 +229,7 @@ export const TableEditor: React.FC<Props> = ({ node, editMode, onChange }) => {
     // ── テーブル ──
     items.push({ group: 'テーブル' });
     items.push({ label: '全行を初期化', icon: '🗑', onClick: () => { if (confirm('全行を削除しますか？')) update({ rows: [] }); }, danger: true, indent: true });
-    items.push({ label: 'テーブルを全初期化', icon: '⚠️', onClick: () => { if (confirm('列・行をすべて削除しますか？')) update({ columns: [], rows: [] }); }, danger: true, indent: true });
+    items.push({ label: 'テーブルを全初期化', icon: '⚠️', onClick: () => { if (confirm('列・行をすべて削除しますか？')) update({ columns: [{ key: 'col_1', label: '列1', type: 'string' }], rows: [] }); }, danger: true, indent: true });
 
     return items;
   };

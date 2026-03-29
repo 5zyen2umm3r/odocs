@@ -1,9 +1,25 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
-import { DocNode, AppMode } from './types';
+import { DocNode, AppMode, TableNode } from './types';
 import { saveToStorage, loadFromStorage } from './utils/storage';
 import { exportToHtml } from './utils/export';
 import { createNode } from './utils/nodeOps';
 import { DocumentView } from './components/DocumentView';
+
+// ===== JSON migration helper =====
+function migrateNodes(raw: (DocNode & { enabled?: boolean })[]): DocNode[] {
+  return raw.map(n => {
+    const { enabled, ...rest } = n;
+    // enabled: false → disabled: true、enabled: true → disabled削除
+    let node: DocNode = rest as DocNode;
+    if (enabled === false) node = { ...rest, disabled: true } as DocNode;
+    else if (enabled === true) { const r = { ...rest } as DocNode & { disabled?: boolean }; delete r.disabled; node = r; }
+    // tableノードで列なし → 列1を補完
+    if (node.type === 'table' && (node as TableNode).columns.length === 0) {
+      node = { ...node, columns: [{ key: 'col_1', label: '列1', type: 'string' }] } as TableNode;
+    }
+    return node;
+  });
+}
 
 // ===== Sample data for first load =====
 function createSampleData(): DocNode[] {
@@ -65,12 +81,7 @@ export default function App() {
     const saved = loadFromStorage();
     if (saved) {
       // 旧フォーマット互換: enabled: false → disabled: true
-      const migrated = saved.nodes.map((n: DocNode & { enabled?: boolean }) => {
-        const { enabled, ...rest } = n as DocNode & { enabled?: boolean };
-        if (enabled === false) return { ...rest, disabled: true };
-        if (enabled === true) { const r = { ...rest }; delete (r as { disabled?: boolean }).disabled; return r; }
-        return rest;
-      }) as DocNode[];
+      const migrated = migrateNodes(saved.nodes as (DocNode & { enabled?: boolean })[]);
       setNodes(migrated);
       setRestored(true);
     } else {
@@ -112,12 +123,7 @@ export default function App() {
         const raw: DocNode[] = Array.isArray(data) ? data : data.nodes ?? [];
         if (raw.length === 0) return alert('有効なノードデータが見つかりません');
         // 旧フォーマット互換: enabled: false → disabled: true に変換
-        const arr = raw.map((n: DocNode & { enabled?: boolean }) => {
-          const { enabled, ...rest } = n as DocNode & { enabled?: boolean };
-          if (enabled === false) return { ...rest, disabled: true };
-          if (enabled === true) { const r = { ...rest }; delete (r as { disabled?: boolean }).disabled; return r; }
-          return rest;
-        }) as DocNode[];
+        const arr = migrateNodes(raw as (DocNode & { enabled?: boolean })[]);
         if (confirm('現在のデータを置き換えますか？（キャンセルで追加）')) {
           setNodes(arr);
         } else {

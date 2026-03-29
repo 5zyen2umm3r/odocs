@@ -114,7 +114,7 @@ export const NodeView: React.FC<Props> = ({ treeNode, allNodes, editMode, depth,
     if (newType === 'text') changed = { ...base, type: 'text' };
     else if (newType === 'metadata') changed = { ...base, type: 'metadata', date: '', user: '' };
     else if (newType === 'image') changed = { ...base, type: 'image', imageUrl: '' };
-    else changed = { ...base, type: 'table', columns: [], rows: [] };
+    else changed = { ...base, type: 'table', columns: [{ key: 'col_1', label: '列1', type: 'string' }], rows: [] };
     update(changed);
   };
 
